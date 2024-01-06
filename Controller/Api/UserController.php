@@ -1,7 +1,6 @@
 <?php
 class UserController extends BaseController
 {
-
     public function listAction() { $this->action('executeListAction'); }
     public function findAction() { $this->action('executeFindAction'); }
     public function appendAction() { $this->action('executeAppendAction'); }
@@ -14,7 +13,7 @@ class UserController extends BaseController
     private function executeFindAction($query, $userModel) {
         if ( isset($query['id']) )
             $id = $query['id'];
-        return json_encode($userModel->getUsers($id));
+        return json_encode($userModel->findUser($id));
     }
     private function executeAppendAction($query, $userModel) {
         if ( isset($query['username']) && isset($query['password']) && isset($query['fullname']) && isset($query['bio']) )

@@ -1,16 +1,17 @@
 <?php
-require __DIR__ . "/inc/bootstrap.php";
-$uri = explode( '/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) );
 
-//echo json_encode( $uri );
+require __DIR__ . "/inc/bootstrap.php";
+require PROJECT_ROOT_PATH . "/Controller/Api/UserController.php";
+
 $a = 5; $b = $a + 1;
+$uri = explode( '/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) );
+$objFeedController = new UserController();
+
 if ((isset($uri[$a]) && $uri[$a] != 'user') || !isset($uri[$b])) {
-    $objFeedController = new UserController();
     $objFeedController->sendOutput(OutputBuilder::notFoundOutput());
     exit();
 }
-require PROJECT_ROOT_PATH . "/Controller/Api/UserController.php";
-$objFeedController = new UserController();
+
 $objFeedController->{$uri[$b] . 'Action'}();
-//echo __DIR__;
+
 ?>

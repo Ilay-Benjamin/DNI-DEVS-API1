@@ -1,15 +1,11 @@
 <?php
 class BaseController
 {
-    /** 
-     * __call magic method. 
-     */
     public function __call( $name, $arguments ) {
         $this->sendOutput(OutputBuilder::notFoundOutput());
     }
     /** 
      * Get URI elements. 
-     *  
      * @return array 
      */
     protected function getUriSegments() {
@@ -19,7 +15,6 @@ class BaseController
     }
     /** 
      * Get querystring params. 
-     *  
      * @return array 
      */
     protected function getQueryStringParams() {
@@ -28,7 +23,6 @@ class BaseController
     }
     /** 
      * Send API output. 
-     * 
      * @param mixed $data 
      * @param string $httpHeader 
      */
@@ -42,4 +36,5 @@ class BaseController
         echo $output->getData();
         exit;
     }
+    
 }

@@ -1,7 +1,8 @@
 <?php
 require_once PROJECT_ROOT_PATH . "/Model/User.php";
 
-class Database {
+class Database
+{
     protected $connection = null;
 
     public function __construct() {

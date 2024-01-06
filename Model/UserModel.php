@@ -9,7 +9,6 @@ class UserModel extends Database
             array_push($users, new User($userData['username'], $userData['password'], $userData['fullname'], $userData['bio'], $userData['id']));
         }
         return $users;
-        //print_r($users);
     }
 
     public function findUser( int $id ) {
