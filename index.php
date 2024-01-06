@@ -12,5 +12,5 @@ require PROJECT_ROOT_PATH . "/Controller/Api/UserController.php";
 $objFeedController = new UserController();
 $strMethodName = $uri[$b] . 'Action';
 $objFeedController->{$strMethodName}();
-echo __DIR__;
+//echo __DIR__;
 ?>
