@@ -36,6 +36,13 @@ class User
             "fullname: '$this->fullname' , bio: '$this->bio' } ";
     }
 
+    public static function print(User|array $users) {
+        foreach ($users as $user) {
+            echo $user;
+        }
+    } 
+
 }
+
 
 ?>

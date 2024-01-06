@@ -1,99 +1,44 @@
 <?php
 class UserController extends BaseController
 {
-    /** 
-     * "/user/list" Endpoint - Get list of users 
-     */
-    public function listAction() {
 
+    public function listAction() { $this->action('executeListAction'); }
+    public function findAction() { $this->action('executeFindAction'); }
+    public function appendAction() { $this->action('executeAppendAction'); }
+    
+    private function executeListAction($query, $userModel) {
+        if ( isset($query['limit']) )
+            $intLimit = $query['limit'];
+        return json_encode($userModel->getUsers($intLimit));
+    }
+    private function executeFindAction($query, $userModel) {
+        if ( isset($query['id']) )
+            $id = $query['id'];
+        return json_encode($userModel->getUsers($id));
+    }
+    private function executeAppendAction($query, $userModel) {
+        if ( isset($query['username']) && isset($query['password']) && isset($query['fullname']) && isset($query['bio']) )
+            $user = new User($query['username'], $query['password'], $query['fullname'], $query['bio']);
+            return json_encode($userModel->appendUser($user));
+    }
+
+    private function action($func) {
         $output = new Output();
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         $query = $this->getQueryStringParams();
         if ( strtoupper($requestMethod) == 'GET' ) {
             try {
-                $userModel = new UserModel();
-                if ( isset($query['limit']) ) {
-                    $intLimit = $query['limit'];
-                }
-                $arrUsers = $userModel->getUsers($intLimit);
-                $responseData = json_encode($arrUsers);
+                $responseData = $this->$func($query, new UserModel());
             } catch ( Error $e ) {
                 $output = OutputBuilder::internalServerErrorOutput($e->getMessage() . 'Something went wrong! Please contact support.');
             }
         } else {
             $output = OutputBuilder::unprocessableEntityOutput();
         }
-        // send output 
-        if ( !$output->getIsError() ) {
-            $output = OutputBuilder::okOutput($responseData);
+        if ( !$output->getIsError() )
+            $this->sendOutput(OutputBuilder::okOutput($responseData));
+        else
             $this->sendOutput($output);
-        } else {
-            $this->sendOutput($output);
-        }
     }
-
-    public function findAction() {
-        $output = new Output();
-        $requestMethod = $_SERVER["REQUEST_METHOD"];
-        $query = $this->getQueryStringParams();
-        if ( strtoupper($requestMethod) == 'GET' ) {
-            try {
-                $intId = 1;
-                $userModel = new UserModel();
-                if ( isset($query['id']) ) {
-                    $intId = $query['id'];
-                }
-                $user = $userModel->findUser($intId);
-                $responseData = json_encode($user);
-            } catch ( Error $e ) {
-                $output = OutputBuilder::internalServerErrorOutput($e->getMessage() . 'Something went wrong! Please contact support.');
-            }
-        } else {
-            $output = OutputBuilder::unprocessableEntityOutput();
-        }
-        // send output 
-        if ( !$output->getIsError() ) {
-            $output = OutputBuilder::okOutput($responseData);
-            $this->sendOutput($output);
-        } else {
-            $this->sendOutput($output);
-        }
-    }
-
-
-    public function appendAction() {
-        $output = new Output();
-        $requestMethod = $_SERVER["REQUEST_METHOD"];
-        $query = $this->getQueryStringParams();
-        if ( strtoupper($requestMethod) == 'GET' ) {
-            try {
-                $stringUsername = "";
-                $stringPassword = "";
-                $stringBio = "";
-                $stringFullname = "";
-                $userModel = new UserModel();
-                if ( isset($query['username']) && isset($query['password']) && isset($query['fullname']) && isset($query['bio']) ) {
-                    $stringUsername = $query['username'];
-                    $stringPassword = $query['password'];
-                    $stringFullname = $query['fullname'];
-                    $stringBio = $query['bio'];
-                }
-                $user = $userModel->appendUser($stringUsername, $stringPassword, $stringFullname, $stringBio);
-                $responseData = json_encode($user);
-            } catch ( Error $e ) {
-                $output = OutputBuilder::internalServerErrorOutput($e->getMessage() . 'Something went wrong! Please contact support.');
-            }
-        } else {
-            $output = OutputBuilder::unprocessableEntityOutput();
-        }
-        // send output 
-        if ( !$output->getIsError() ) {
-            $output = OutputBuilder::okOutput($responseData);
-            $this->sendOutput($output);
-        } else {
-            $this->sendOutput($output);
-        }
-    }
-
 
 }
