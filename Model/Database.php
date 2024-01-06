@@ -1,15 +1,8 @@
 <?php
-
-//require_once(__DIR__."/../inc/config.php");
-
-//$db = new Database();
-//echo json_encode($db->select ("Select * from users LIMIT ?", ['i', 2]));
-//echo "<br>" . json_encode(explode( '/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)));e
+require_once PROJECT_ROOT_PATH . "/Model/User.php";
 
 class Database {
-
     protected $connection = null;
-
 
     public function __construct() {
         try {
@@ -42,8 +35,8 @@ class Database {
             if ( $stmt === false )
                 throw new Exception("Unable to do prepared statement: " . $query);
             if ( $params ) {
-                $x = array_slice($params, 1);
-                $stmt->bind_param($params[0], ...$x);
+                $vars = array_slice($params, 1);
+                $stmt->bind_param($params[0], ...$vars);
             }
             $stmt->execute();
             return $stmt;

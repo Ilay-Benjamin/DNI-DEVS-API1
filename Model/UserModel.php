@@ -8,7 +8,10 @@ class UserModel extends Database
     }
 
     public function findUser($id) {
-        return $this->execute("SELECT * FROM users WHERE id=?", ["i", $id]);
+        $res = (array)$this->execute("SELECT * FROM users WHERE id=?", ["i", $id]);
+        $userData = (array)$res[0];
+        $user = new User($userData['username'], $userData['password'], $userData['fullname'], $userData['bio'], $userData['id']);
+        return $user;
     }
 
     public function appendUser($username, $password, $fullname, $bio) {
