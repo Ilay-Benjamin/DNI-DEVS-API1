@@ -18,7 +18,14 @@ class Database
     public function execute( $query = "", $params = [] ) {
         try {
             $stmt = $this->executeStatement($query, $params);
-            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            //$result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            if ($stmt->field_count > 0) {
+                // If the statement is a SELECT statement, fetch the results
+                $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+            } else {
+                // If the statement is an INSERT statement, return the inserted ID
+                $result = $stmt->insert_id;
+            }
             $stmt->close();
             if ( !is_null($stmt) )
                 return $result;

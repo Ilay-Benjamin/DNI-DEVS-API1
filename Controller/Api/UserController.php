@@ -11,8 +11,7 @@ class UserController extends BaseController
                 default: throw new Exception('The action "'.$actionName.'" does not exist.');
             }
         } catch (Exception $e) {
-            $output = OutputBuilder::notFoundOutput($e->getMessage());
-            $this->sendOutput($output);
+            $this->sendOutput(OutputBuilder::notFoundOutput($e->getMessage()));
         }
     }
     private function executeListAction( $query, $userModel ) {
