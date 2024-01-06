@@ -14,7 +14,6 @@ class Database {
         }
     }
 
-
     public function execute( $query = "", $params = [] ) {
         try {
             $stmt = $this->executeStatement($query, $params);
@@ -27,7 +26,6 @@ class Database {
         }
         return false;
     }
-
 
     private function executeStatement( $query = "", $params = [] ) {
         try {
@@ -44,6 +42,5 @@ class Database {
             throw new Exception($e->getMessage());
         }
     }
-
 
 }

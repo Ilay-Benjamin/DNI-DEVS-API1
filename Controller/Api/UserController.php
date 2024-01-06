@@ -2,86 +2,77 @@
 class UserController extends BaseController
 {
     /** 
-* "/user/list" Endpoint - Get list of users 
-*/
-    public function listAction()
-    {
-        $strErrorDesc = '';
+     * "/user/list" Endpoint - Get list of users 
+     */
+    public function listAction() {
+
+        $output = new Output();
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         $query = $this->getQueryStringParams();
-        if (strtoupper($requestMethod) == 'GET') {
+        if ( strtoupper($requestMethod) == 'GET' ) {
             try {
                 $userModel = new UserModel();
-                if(isset($query['limit'])) {
+                if ( isset($query['limit']) ) {
                     $intLimit = $query['limit'];
                 }
                 $arrUsers = $userModel->getUsers($intLimit);
                 $responseData = json_encode($arrUsers);
-            } catch (Error $e) {
-                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
-                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            } catch ( Error $e ) {
+                $output = OutputBuilder::internalServerErrorOutput($e->getMessage() . 'Something went wrong! Please contact support.');
             }
         } else {
-            $strErrorDesc = 'Method not supported';
-            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+            $output = OutputBuilder::unprocessableEntityOutput();
         }
         // send output 
-        if (!$strErrorDesc) {
-            $this->sendOutput(
-                $responseData,
-                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-            );
+        if ( !$output->getIsError() ) {
+            $output = OutputBuilder::okOutput($responseData);
+            $this->sendOutput($output);
         } else {
-            $this->sendOutput(json_encode(array('error' => $strErrorDesc)), 
-                array('Content-Type: application/json', $strErrorHeader)
-            );
+            $this->sendOutput($output);
         }
     }
 
     public function findAction() {
-        $strErrorDesc = '';
+        $output = new Output();
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         $query = $this->getQueryStringParams();
-        if (strtoupper($requestMethod) == 'GET') {
+        if ( strtoupper($requestMethod) == 'GET' ) {
             try {
                 $intId = 1;
                 $userModel = new UserModel();
-                if(isset($query['id'])) {
+                if ( isset($query['id']) ) {
                     $intId = $query['id'];
                 }
                 $user = $userModel->findUser($intId);
                 $responseData = json_encode($user);
-            } catch (Error $e) {
-                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
-                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            } catch ( Error $e ) {
+                $output = OutputBuilder::internalServerErrorOutput($e->getMessage() . 'Something went wrong! Please contact support.');
             }
         } else {
-            $strErrorDesc = 'Method not supported';
-            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+            $output = OutputBuilder::unprocessableEntityOutput();
         }
-        // send Output
-        if (!$strErrorDesc) {
-            $this->sendOutput(
-                $responseData, 
-                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-            );
+        // send output 
+        if ( !$output->getIsError() ) {
+            $output = OutputBuilder::okOutput($responseData);
+            $this->sendOutput($output);
         } else {
-            $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
-                array('Content-Type: application/json', $strErrorHeader)
-            );
+            $this->sendOutput($output);
         }
     }
 
 
     public function appendAction() {
-        $strErrorDesc = '';
+        $output = new Output();
         $requestMethod = $_SERVER["REQUEST_METHOD"];
         $query = $this->getQueryStringParams();
-        if (strtoupper($requestMethod) == 'GET') {
+        if ( strtoupper($requestMethod) == 'GET' ) {
             try {
-                $stringUsername = ""; $stringPassword = ""; $stringBio = ""; $stringFullname = "";
+                $stringUsername = "";
+                $stringPassword = "";
+                $stringBio = "";
+                $stringFullname = "";
                 $userModel = new UserModel();
-               if(isset($query['username']) && isset($query['password']) && isset($query['fullname']) && isset($query['bio'])) {
+                if ( isset($query['username']) && isset($query['password']) && isset($query['fullname']) && isset($query['bio']) ) {
                     $stringUsername = $query['username'];
                     $stringPassword = $query['password'];
                     $stringFullname = $query['fullname'];
@@ -89,24 +80,18 @@ class UserController extends BaseController
                 }
                 $user = $userModel->appendUser($stringUsername, $stringPassword, $stringFullname, $stringBio);
                 $responseData = json_encode($user);
-            } catch (Error $e) {
-                $strErrorDesc = $e->getMessage().'Something went wrong! Please contact support.';
-                $strErrorHeader = 'HTTP/1.1 500 Internal Server Error';
+            } catch ( Error $e ) {
+                $output = OutputBuilder::internalServerErrorOutput($e->getMessage() . 'Something went wrong! Please contact support.');
             }
         } else {
-            $strErrorDesc = 'Method not supported';
-            $strErrorHeader = 'HTTP/1.1 422 Unprocessable Entity';
+            $output = OutputBuilder::unprocessableEntityOutput();
         }
-        // send Output
-        if (!$strErrorDesc) {
-            $this->sendOutput(
-                $responseData, 
-                array('Content-Type: application/json', 'HTTP/1.1 200 OK')
-            );
+        // send output 
+        if ( !$output->getIsError() ) {
+            $output = OutputBuilder::okOutput($responseData);
+            $this->sendOutput($output);
         } else {
-            $this->sendOutput(json_encode(array('error' => $strErrorDesc)),
-                array('Content-Type: application/json', $strErrorHeader)
-            );
+            $this->sendOutput($output);
         }
     }
 
