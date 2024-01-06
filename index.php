@@ -12,6 +12,6 @@ if ((isset($uri[$a]) && $uri[$a] != 'user') || !isset($uri[$b])) {
     exit();
 }
 
-$objFeedController->{$uri[$b] . 'Action'}();
+$objFeedController->action($uri[$b]);
 
 ?>
