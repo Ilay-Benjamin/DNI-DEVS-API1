@@ -8,6 +8,8 @@ class UserController extends BaseController
                 case 'list': $this->execute('executeListAction'); break;
                 case 'find': $this->execute('executeFindAction'); break;
                 case 'append': $this->execute('executeAppendAction'); break;
+                case 'delete': $this->execute('executeDeleteAction'); break;
+                case 'update': $this->execute('executeUpdateAction'); break;
                 default: throw new Exception('The action "'.$actionName.'" does not exist.');
             }
         } catch (Exception $e) {
@@ -28,6 +30,23 @@ class UserController extends BaseController
         if ( isset($query['username']) && isset($query['password']) && isset($query['fullname']) && isset($query['bio']) )
             $user = new User($query['username'], $query['password'], $query['fullname'], $query['bio']);
         return $userModel->appendUser($user);
+    }
+    private function executeDeleteAction( $query, $userModel ) {
+        if ( isset($query['id']) )
+            $id = $query['id'];
+        return $userModel->deleteUser($id);
+    }
+    private function executeUpdateAction( $query, $userModel ) {
+        $userTableFields = ['id', 'username', 'password', 'fullname', 'bio'];
+        if ( isset($query['id']) && (isset($query['username']) || isset($query['password']) || isset($query['fullname']) || isset($query['bio'])) ) {
+            $changes = [];
+            $id = $query['id'];
+            foreach ($userTableFields as $field) {
+                if (isset($query[$field]))
+                    $changes[$field] = $query[$field];
+            }
+        }    
+         return $userModel->updateUser($changes, $id);
     }
 
     private function execute( $func ) {

@@ -23,4 +23,24 @@ class UserModel extends Database
         return $this->getUsers(1000);
     }
 
+    public function deleteUser ( int $id ) { 
+        $this->execute("DELETE FROM users WHERE id=?", [ "i", $id ]);
+        return $this->getUsers(1000);
+    }
+
+    public function updateUser (array $changes, int $id) {
+        $statement = "UPDATE users SET";
+        $types = "";
+        $values = [];
+        foreach ($changes as $field => $value) {
+            $statement .= ( strlen($types) > 0 ? ", " : " " ) . $field . "=?";
+            array_push($values, $value);
+            $types .= "s";
+        }
+        $statement .= " WHERE id=?";
+        array_push($values, $id);
+        $types .= "i";
+        $this->execute($statement, [$types, ...$values]);
+        return $this->getUsers(1000);
+    }
 }
