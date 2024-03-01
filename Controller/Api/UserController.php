@@ -27,8 +27,8 @@ class UserController extends BaseController
         return $userModel->findUser($id);
     }
     private function executeAppendAction( $query, $userModel ) {
-        if ( isset($query['username']) && isset($query['password']) && isset($query['fullname']) && isset($query['bio']) )
-            $user = new User($query['username'], $query['password'], $query['fullname'], $query['bio']);
+        if ( isset($query['phoneNumber']) && isset($query['email']) && isset($query['fullname']) )
+            $user = new User($query['phoneNumber'], $query['email'], $query['fullname']);
         return $userModel->appendUser($user);
     }
     private function executeDeleteAction( $query, $userModel ) {
@@ -37,8 +37,8 @@ class UserController extends BaseController
         return $userModel->deleteUser($id);
     }
     private function executeUpdateAction( $query, $userModel ) {
-        $userTableFields = ['id', 'username', 'password', 'fullname', 'bio'];
-        if ( isset($query['id']) && (isset($query['username']) || isset($query['password']) || isset($query['fullname']) || isset($query['bio'])) ) {
+        $userTableFields = ['id', 'phoneNumber', 'email', 'fullname'];
+        if ( isset($query['id']) && (isset($query['phoneNumber']) || isset($query['email']) || isset($query['fullname'])) ) {
             $changes = [];
             $id = $query['id'];
             foreach ($userTableFields as $field) {

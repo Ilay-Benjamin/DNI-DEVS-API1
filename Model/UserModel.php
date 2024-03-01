@@ -6,20 +6,20 @@ class UserModel extends Database
         $usersData = $this->execute("SELECT * FROM users LIMIT ?", [ "i", $limit ]);
         $users = array();
         foreach ($usersData as $userData) {
-            array_push($users, new User($userData['username'], $userData['password'], $userData['fullname'], $userData['bio'], $userData['id']));
+            array_push($users, new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']));
         }
         return $users;
     }
 
     public function findUser( int $id ) {
         $userData = $this->execute("SELECT * FROM users WHERE id=?", [ "i", $id ])[0];
-        $user = new User($userData['username'], $userData['password'], $userData['fullname'], $userData['bio'], $userData['id']);
+        $user = new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']);
         return $user;
     }
 
     public function appendUser( User $user ) {
-        $this->execute("INSERT INTO users(username, password, fullname, bio) VALUES (?, ?, ?, ?)", 
-            [ "ssss", $user->username, $user->password, $user->fullname, $user->bio ]);
+        $this->execute("INSERT INTO users(phoneNumber, email, fullname) VALUES (?, ?, ?)", 
+            [ "sss", $user->phoneNumber, $user->email, $user->fullname]);
         return $this->getUsers(1000);
     }
 
