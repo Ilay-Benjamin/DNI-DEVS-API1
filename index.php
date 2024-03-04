@@ -4,7 +4,7 @@ header('Access-Control-Allow-Origin: *');
 require __DIR__ . "/inc/bootstrap.php";
 require PROJECT_ROOT_PATH . "/Controller/Api/UserController.php";
 
-$a = 5; $b = $a + 1;
+$a = 4; $b = $a + 1;
 $uri = explode( '/', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) );
 $objFeedController = new UserController();
 
