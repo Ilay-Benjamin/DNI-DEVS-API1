@@ -15,19 +15,26 @@ class UserModel extends Database
         if ( $field == "id" && is_int($data) ) {
             $id = $data;
             $userData = $this->execute("SELECT * FROM users WHERE id=?", [ "i", $id ])[0];
-            $user = new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']);
-            return $user;
+            if (isset($userData)) {
+                $user = new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']);
+                return $user;
+            }
+            return null;
         }
         else if ( $field == "email" && is_string($data) ) {
             $email = $data;
             $userData = $this->execute("SELECT * FROM users WHERE email=?", [ "s", $email ])[0];
-            $user = new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']);
-            return $user;
+            if (isset($userData)) {
+                $user = new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']);
+                return $user;
+            }
+            return null;
         }
     }
 
     public function appendUser( User $user ) {
-        if ( $this->findUser($user->email, "email") ) {
+        $findUserByEmailResults = $this->findUser($user->email, "email");
+        if ( isset( $findUserByEmailResults ) ) {
             throw new Exception("The email already exists.");
         } else {
             $this->execute("INSERT INTO users(phoneNumber, email, fullname) VALUES (?, ?, ?)", 
