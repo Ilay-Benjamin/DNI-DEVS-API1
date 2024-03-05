@@ -22,9 +22,15 @@ class UserController extends BaseController
         return $userModel->getUsers($intLimit);
     }
     private function executeFindAction( $query, $userModel ) {
-        if ( isset($query['id']) )
-            $id = $query['id'];
-        return $userModel->findUser($id);
+        $field = '';
+        if ( isset($query['id']) && !isset($query['email']) ) {
+            $field = 'id';
+        }
+        else if ( isset($query['email']) && !isset($query['id']) ) {
+            $field = 'email';
+        }
+        $data = $query[$field];
+        return $userModel->findUser($data, $field);
     }
     private function executeAppendAction( $query, $userModel ) {
         if ( isset($query['phoneNumber']) && isset($query['email']) && isset($query['fullname']) )

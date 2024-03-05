@@ -11,16 +11,29 @@ class UserModel extends Database
         return $users;
     }
 
-    public function findUser( int $id ) {
-        $userData = $this->execute("SELECT * FROM users WHERE id=?", [ "i", $id ])[0];
-        $user = new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']);
-        return $user;
+    public function findUser( int|String $data, string $field ) {
+        if ( $field == "id" && is_int($data) ) {
+            $id = $data;
+            $userData = $this->execute("SELECT * FROM users WHERE id=?", [ "i", $id ])[0];
+            $user = new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']);
+            return $user;
+        }
+        else if ( $field == "email" && is_string($data) ) {
+            $email = $data;
+            $userData = $this->execute("SELECT * FROM users WHERE email=?", [ "s", $email ])[0];
+            $user = new User($userData['phoneNumber'], $userData['email'], $userData['fullname'], $userData['id']);
+            return $user;
+        }
     }
 
     public function appendUser( User $user ) {
-        $this->execute("INSERT INTO users(phoneNumber, email, fullname) VALUES (?, ?, ?)", 
+        if ( $this->findUser($user->email, "email") ) {
+            throw new Exception("The email already exists.");
+        } else {
+            $this->execute("INSERT INTO users(phoneNumber, email, fullname) VALUES (?, ?, ?)", 
             [ "sss", $user->phoneNumber, $user->email, $user->fullname]);
-        return $this->getUsers(1000);
+            return $this->getUsers(1000);
+        }
     }
 
     public function deleteUser ( int $id ) { 

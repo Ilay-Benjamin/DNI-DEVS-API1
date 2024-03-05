@@ -10,7 +10,7 @@ class User
     public string $email;
     public int $id;
 
-    public function __construct( string $phoneNumber, string $email, string $fullname, string $bio = "", int $id = -1 ) {
+    public function __construct( string $phoneNumber, string $email, string $fullname, int $id = -1 ) {
         $this->phoneNumber = $phoneNumber;
         $this->email = $email;
         $this->fullname = $fullname;
