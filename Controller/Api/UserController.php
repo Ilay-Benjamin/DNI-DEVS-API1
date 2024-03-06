@@ -6,7 +6,8 @@ class UserController extends BaseController
         try {
             switch ($actionName) {
                 case 'list': $this->execute('executeListAction'); break;
-                case 'find': $this->execute('executeFindAction'); break;
+                case 'findById': $this->execute('executeFindByIdAction'); break;
+                case 'findByEmail': $this->execute('executeFindByEmailAction'); break;
                 case 'append': $this->execute('executeAppendAction'); break;
                 case 'delete': $this->execute('executeDeleteAction'); break;
                 case 'update': $this->execute('executeUpdateAction'); break;
@@ -21,16 +22,15 @@ class UserController extends BaseController
             $intLimit = $query['limit'];
         return $userModel->getUsers($intLimit);
     }
-    private function executeFindAction( $query, $userModel ) {
-        $field = '';
-        if ( isset($query['id']) && !isset($query['email']) ) {
-            $field = 'id';
-        }
-        else if ( isset($query['email']) && !isset($query['id']) ) {
-            $field = 'email';
-        }
-        $data = $query[$field];
-        return $userModel->findUser($data, $field);
+    private function executeFindByIdAction( $query, $userModel ) {
+        if ( isset($query['id']) ) 
+            $id = $query['id'];
+        return $userModel->findUserById( $id );
+    }
+    private function executeFindByEmailAction( $query, $userModel ) {
+        if ( isset($query['email']) ) 
+            $email = $query['email'];
+        return $userModel->findUserByEmail( $email );
     }
     private function executeAppendAction( $query, $userModel ) {
         if ( isset($query['phoneNumber']) && isset($query['email']) && isset($query['fullname']) )
